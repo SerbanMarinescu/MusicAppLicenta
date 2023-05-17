@@ -5,6 +5,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.aplicatielicenta.R
+import com.example.aplicatielicenta.adapters.SwipeSongAdapter
+import com.example.aplicatielicenta.exoplayer.MusicServiceConnection
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,6 +20,14 @@ object AppModule {
 
     @Singleton
     @Provides
+    fun provideMusicServiceConnection(@ApplicationContext context: Context) = MusicServiceConnection(context)
+
+    @Singleton
+    @Provides
+    fun providesSwipeSongAdapter() = SwipeSongAdapter()
+
+    @Singleton
+    @Provides
     fun provideGlideInstance(
         @ApplicationContext context: Context
     ) = Glide.with(context).setDefaultRequestOptions(
@@ -27,10 +37,4 @@ object AppModule {
             .diskCacheStrategy(DiskCacheStrategy.DATA)
     )
 
-
-    @Singleton
-    @Provides
-    fun provideString(): String{
-        return "String injected!"
-    }
 }

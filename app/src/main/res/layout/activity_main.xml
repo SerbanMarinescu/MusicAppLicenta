@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:id="@+id/rootLayout">
 
     <LinearLayout
         android:id="@+id/layout_appbar"
@@ -28,6 +29,7 @@
         </TextView>
 
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_profile"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:src="@drawable/music_template"
@@ -68,6 +70,7 @@
         >
 
         <ImageView
+            android:id="@+id/ivCurSong"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/music_template"
@@ -87,6 +90,7 @@
         </androidx.viewpager2.widget.ViewPager2>
 
         <ImageView
+            android:id="@+id/ivPlayPause"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:src="@drawable/img_play"

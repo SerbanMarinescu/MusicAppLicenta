@@ -17,8 +17,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AplicatieLicenta"
         tools:targetApi="31">
+        <activity
+            android:name=".SongDetailsActivity"
+            android:exported="false" />
 
-        <service android:name=".exoplayer.MusicService"
+        <service
+            android:name=".exoplayer.MusicService"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.media.browse.MediaBrowserService" />

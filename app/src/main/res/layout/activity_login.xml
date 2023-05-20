@@ -42,11 +42,24 @@
 
     </EditText>
 
+    <CheckBox
+        android:layout_below="@id/etPassword_LogIn"
+        android:id="@+id/cbRemember"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Remember me"
+        android:layout_alignParentEnd="true"
+        android:textSize="15sp"
+        android:layout_marginEnd="25dp"
+        >
+
+    </CheckBox>
+
     <Button
         android:id="@+id/btn_LogIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/etPassword_LogIn"
+        android:layout_below="@+id/cbRemember"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:text="Log In"

@@ -16,12 +16,18 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.RequestManager
 import com.example.aplicatielicenta.adapters.SwipeSongAdapter
 import com.example.aplicatielicenta.data.Song
+import com.example.aplicatielicenta.data.User
 import com.example.aplicatielicenta.exoplayer.isPlaying
 import com.example.aplicatielicenta.exoplayer.toSong
 import com.example.aplicatielicenta.other.Status
 import com.example.aplicatielicenta.ui.viewmodels.MainViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.AndroidEntryPoint
 import de.hdodenhof.circleimageview.CircleImageView
 import javax.inject.Inject
@@ -45,6 +51,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var rootLayout: RelativeLayout
     private lateinit var profileImg: CircleImageView
 
+    private lateinit var account: FirebaseAuth
+
     private var curPlayingSong: Song? = null
     private var playbackState: PlaybackStateCompat? = null
 
@@ -59,11 +67,14 @@ class MainActivity : AppCompatActivity() {
         rootLayout = findViewById(R.id.rootLayout)
         profileImg = findViewById(R.id.iv_profile)
 
+        account = FirebaseAuth.getInstance()
+
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostFragmentContainer) as NavHostFragment
         navController = navHostFragment.navController
 
         bottomNavView.setupWithNavController(navController)
 
+        setUserImage()
         subscribeToObservers()
 
         vpSong.adapter = swipeSongAdapter
@@ -92,9 +103,29 @@ class MainActivity : AppCompatActivity() {
         }
 
         profileImg.setOnClickListener{
-
+            startActivity(Intent(this, ProfileActivity::class.java))
         }
 
+    }
+
+    private fun setUserImage() {
+
+        val userRef = FirebaseDatabase.getInstance().reference.child("Users").child(account.currentUser!!.uid)
+
+        userRef.addValueEventListener(object : ValueEventListener{
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists()){
+                    val user = snapshot.getValue(User::class.java)
+                    glide.load(user!!.imageUrl).into(profileImg)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
     }
 
     private fun switchViewPagerToCurrentSong(song: Song){

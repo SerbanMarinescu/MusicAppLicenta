@@ -81,9 +81,10 @@ class SgnUpActivity : AppCompatActivity() {
         account.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
 
             if(it.isSuccessful){
-                saveUserInfo(username, email, password)
+                saveUserInfo(username, email)
                 dialog.dismiss()
-                startActivity(Intent(this, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK))
+                startActivity(Intent(this, QuizActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK))
+                finish()
             }
             else{
                 dialog.dismiss()
@@ -94,7 +95,7 @@ class SgnUpActivity : AppCompatActivity() {
 
     }
 
-    private fun saveUserInfo(username: String, email: String, password: String) {
+    private fun saveUserInfo(username: String, email: String) {
 
         val currentUser = account.currentUser!!.uid
         val userRef = FirebaseDatabase.getInstance().reference.child("Users").child(currentUser)
@@ -103,7 +104,7 @@ class SgnUpActivity : AppCompatActivity() {
             "uid" to currentUser,
             "username" to username,
             "email" to email,
-            "password" to password
+            "imageUrl" to "https://firebasestorage.googleapis.com/v0/b/spotifyapp-bf8e2.appspot.com/o/DefaultProfilePicture%2Fprofile.png?alt=media&token=8ee333b5-1c0d-43b9-a390-5bc9838833b6"
         )
 
         userRef.setValue(userData)

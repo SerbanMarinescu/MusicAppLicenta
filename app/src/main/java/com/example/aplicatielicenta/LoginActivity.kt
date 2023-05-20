@@ -1,5 +1,6 @@
 package com.example.aplicatielicenta
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -17,6 +18,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var password: EditText
     private lateinit var logIn: Button
     private lateinit var goSgnUp: Button
+    private lateinit var checkBoxRemember: CheckBox
     private lateinit var account: FirebaseAuth
     private lateinit var dialog: AlertDialog
 
@@ -27,14 +29,27 @@ class LoginActivity : AppCompatActivity() {
         email = findViewById(R.id.etEmail_LogIn)
         password = findViewById(R.id.etPassword_LogIn)
         logIn = findViewById(R.id.btn_LogIn)
+        checkBoxRemember = findViewById(R.id.cbRemember)
         goSgnUp = findViewById(R.id.btn_goSgnUp)
+
         account = FirebaseAuth.getInstance()
+
+
+        val myPrefs = getSharedPreferences("Preferences", Context.MODE_PRIVATE)
+        val prefsEditor = myPrefs.edit()
+
+        val remember = myPrefs.getBoolean("checkBox", false)
+
+        if(remember){
+            startActivity(Intent(this, MainActivity::class.java))
+        }
+
 
         val dialogView = LayoutInflater.from(this).inflate(R.layout.progress_bar_layout,null)
         val pbTitle = dialogView.findViewById<TextView>(R.id.progressBar_title)
         pbTitle.text = "Logging in..."
-
         dialog = AlertDialog.Builder(this).setView(dialogView).setCancelable(false).create()
+
 
         logIn.setOnClickListener {
 
@@ -55,6 +70,14 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            if(checkBoxRemember.isChecked){
+                prefsEditor.putBoolean("checkBox", true)
+                prefsEditor.apply()
+            } else{
+                prefsEditor.clear()
+                prefsEditor.apply()
+            }
+
             logIn(email_user, password_user)
         }
 
@@ -70,22 +93,13 @@ class LoginActivity : AppCompatActivity() {
             if (it.isSuccessful) {
                 dialog.dismiss()
                 startActivity(Intent(this@LoginActivity, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK))
+                finish()
             } else {
                 Toast.makeText(this, "Error logging in", Toast.LENGTH_LONG).show()
+                dialog.dismiss()
             }
         }
     }
 
-    /*
-    override fun onStart() {
-        super.onStart()
-
-        if(account.currentUser!=null){
-            startActivity(Intent(this, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK))
-            finish()
-        }
-    }
-
-     */
 }
 

@@ -10,9 +10,9 @@ class Quiz {
     )
 
      val quizOptions = listOf(
-        listOf("Pop", "Rock", "Hip-hop", "Country"),
-        listOf("1960s", "1970s", "1980s", "1990s"),
-        listOf("Beyoncé", "The Beatles", "Eminem", "Taylor Swift"),
+        listOf("Pop", "Romantic", "Dance", "Country"),
+        listOf("1980", "1990", "2000", "2023"),
+        listOf("Beyoncé", "Ed Sheeran", "The Weeknd", "Taylor Swift"),
         // Add more options here
     )
 

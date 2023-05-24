@@ -50,6 +50,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var playPauseImg: ImageView
     private lateinit var rootLayout: RelativeLayout
     private lateinit var profileImg: CircleImageView
+    private lateinit var txtMain: TextView
 
     private lateinit var account: FirebaseAuth
 

@@ -1,10 +1,12 @@
 package com.example.aplicatielicenta.exoplayer
 
+import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.MediaItem.FLAG_PLAYABLE
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.MediaMetadataCompat.*
+import android.util.Log
 import androidx.core.net.toUri
 import com.example.aplicatielicenta.data.MusicDatabase
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource
@@ -16,6 +18,7 @@ import javax.inject.Inject
 
 
 class FirebaseMusicSource @Inject constructor(private val musicDatabase: MusicDatabase) {
+
 
     var songs = emptyList<MediaMetadataCompat>()
 
@@ -39,6 +42,8 @@ class FirebaseMusicSource @Inject constructor(private val musicDatabase: MusicDa
                 .putString(METADATA_KEY_ALBUM_ART_URI, song.imageUrl)
                 .putString(METADATA_KEY_DISPLAY_SUBTITLE, song.subtitle)
                 .putString(METADATA_KEY_DISPLAY_DESCRIPTION, song.subtitle)
+                .putString(METADATA_KEY_GENRE, song.genre)
+                .putLong(METADATA_KEY_YEAR, song.year)
                 .build()
         }
 

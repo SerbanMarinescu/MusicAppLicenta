@@ -89,15 +89,11 @@ class MusicDatabase {
             val decadeOptions = options[1]
             val songWriterOptions = options[2]
 
-            var tempQuery: Query = songCollection
             var check = false
-
 
             var genreQuery: Query = songCollection
             var decadeQuery: Query = songCollection
             var songWriterQuery: Query = songCollection
-
-
 
             val genreSnapshot: QuerySnapshot
             val decadeSnapshot: QuerySnapshot

@@ -1,12 +1,14 @@
 package com.example.aplicatielicenta.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
+import com.example.aplicatielicenta.AlbumActivity
 import com.example.aplicatielicenta.R
 import com.example.aplicatielicenta.data.Album
 import de.hdodenhof.circleimageview.CircleImageView
@@ -25,7 +27,17 @@ class AlbumAdapter @Inject constructor(private val glide: RequestManager, privat
         val album = albumList[position]
 
         holder.albumName.text = album.name
-        glide.load(getDrawableResourceId(holder.itemView.context, album.name.lowercase())).into(holder.albumImage)
+
+        val image = getDrawableResourceId(holder.itemView.context, album.name.lowercase())
+        glide.load(image).into(holder.albumImage)
+
+        holder.itemView.setOnClickListener{
+            val intent = Intent(holder.itemView.context, AlbumActivity::class.java).apply {
+                putExtra("albumName", album.name)
+                putExtra("albumImage", image)
+            }
+            holder.itemView.context.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int {

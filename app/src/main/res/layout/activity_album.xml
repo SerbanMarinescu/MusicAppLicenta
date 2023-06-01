@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AlbumActivity">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/ivAlbum"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/music_template">
+
+    </de.hdodenhof.circleimageview.CircleImageView>
+
+    <TextView
+        android:id="@+id/etAlbum"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_toEndOf="@id/ivAlbum"
+        android:gravity="center"
+        android:text="Album Name"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        android:textStyle="bold">
+
+    </TextView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvSongGenres"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etAlbum"
+        android:layout_marginTop="20dp"
+        tools:listitem="@layout/song_layout">
+
+    </androidx.recyclerview.widget.RecyclerView>
+</RelativeLayout>

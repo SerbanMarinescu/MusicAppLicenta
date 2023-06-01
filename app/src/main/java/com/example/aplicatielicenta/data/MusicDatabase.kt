@@ -83,8 +83,6 @@ class MusicDatabase {
 
             val options = getRecommenderList()
 
-            delay(5000)
-
             val genreOptions = options[0]
             val decadeOptions = options[1]
             val songWriterOptions = options[2]

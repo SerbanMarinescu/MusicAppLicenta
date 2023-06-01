@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="horizontal_spacing">20dp</dimen>
+    <dimen name="vertical_spacing">10dp</dimen>
+
+</resources>

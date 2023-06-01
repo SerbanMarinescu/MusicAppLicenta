@@ -11,19 +11,22 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/cim_album"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginTop="20dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="10dp"
             android:layout_gravity="center"
             android:src="@drawable/music_template">
 
         </de.hdodenhof.circleimageview.CircleImageView>
 
         <TextView
+            android:id="@+id/etAlbumName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textSize="20sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:text="Album name">
 
         </TextView>

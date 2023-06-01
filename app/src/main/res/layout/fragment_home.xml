@@ -35,7 +35,7 @@
                 android:layout_marginStart="15dp"
                 android:id="@+id/rv_recommended"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="200dp"
                 android:orientation="vertical"
                 tools:listitem="@layout/song_layout"
                 >
@@ -53,7 +53,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
-                    android:text="Albums"
+                    android:text="Categories"
                     android:textSize="23sp">
 
                 </TextView>
@@ -66,6 +66,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     tools:listitem="@layout/album_layout"
+                    android:layout_marginBottom="10dp"
                     >
 
                 </androidx.recyclerview.widget.RecyclerView>

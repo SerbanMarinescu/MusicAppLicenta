@@ -6,6 +6,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.AsyncListDiffer
 import com.bumptech.glide.RequestManager
 import com.example.aplicatielicenta.R
+import com.example.aplicatielicenta.data.Song
 import javax.inject.Inject
 
 class SongAdapter @Inject constructor(private val glide: RequestManager): BaseSongAdapter(R.layout.song_layout) {
@@ -31,4 +32,9 @@ class SongAdapter @Inject constructor(private val glide: RequestManager): BaseSo
             }
         }
     }
+
+    fun updateSongs(song: List<Song>){
+        differ.submitList(song)
+    }
+
 }

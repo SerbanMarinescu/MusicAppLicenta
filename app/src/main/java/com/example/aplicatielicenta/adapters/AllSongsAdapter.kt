@@ -14,14 +14,21 @@ import com.example.aplicatielicenta.data.Song
 import com.example.aplicatielicenta.other.Constants.SONG_COLLECTION
 import com.google.android.exoplayer2.MediaItem.fromUri
 import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
+import com.google.firebase.firestore.*
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
+
 
 class AllSongsAdapter @Inject constructor(private val glide: RequestManager) : RecyclerView.Adapter<AllSongsAdapter.AllSongsViewHolder>() {
 
-    private val songCollection = FirebaseFirestore.getInstance().collection(SONG_COLLECTION)
+    private val firestore = FirebaseFirestore.getInstance()
+    private val songCollection = firestore.collection(SONG_COLLECTION)
 
     var songs: MutableList<Song> = mutableListOf()
 
@@ -78,6 +85,125 @@ class AllSongsAdapter @Inject constructor(private val glide: RequestManager) : R
     suspend fun fetchData() {
         songs = getSongsFromFirestore() as MutableList<Song>
         notifyDataSetChanged()
+    }
+
+
+
+    suspend fun fetchOptions(questionRef: DatabaseReference): List<String> {
+
+        return suspendCoroutine { continuation ->
+
+            questionRef.addListenerForSingleValueEvent(object : ValueEventListener {
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val optionsList = mutableListOf<String>()
+
+                    if (snapshot.exists()) {
+                        for (snap in snapshot.children) {
+                            val value = snap.getValue(String::class.java)
+                            value?.let {
+                                optionsList.add(value)
+                            }
+                        }
+                    } else {
+                        optionsList.add("NoneSelected")
+                    }
+
+                    continuation.resume(optionsList)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    // Handle the error if necessary
+                    continuation.resume(emptyList())
+                }
+            })
+        }
+    }
+
+    suspend fun getRecommenderList(): List<List<String>> = coroutineScope{
+
+        val recommenderList: MutableList<List<String>> = mutableListOf()
+
+        val quizRef = FirebaseDatabase.getInstance().reference.child("Quiz")
+            .child(FirebaseAuth.getInstance().currentUser!!.uid)
+
+        val questions = listOf("Question 1", "Question 2", "Question 3")
+
+        for (question in questions) {
+            val questionRef = quizRef.child(question)
+
+            val optionsList = async {
+                fetchOptions(questionRef)
+            }
+            recommenderList.add(optionsList.await())
+        }
+        return@coroutineScope recommenderList
+    }
+
+    suspend fun getAllSongs(): List<Song>{
+
+        val options = getRecommenderList()
+
+        var check = false
+
+        val genreOptions = options[0]
+        val decadeOptions = options[1]
+        val songWriterOptions = options[2]
+
+        var genreQuery: Query = songCollection
+        var decadeQuery: Query = songCollection
+        var songWriterQuery: Query = songCollection
+
+        val genreSnapshot: QuerySnapshot
+        val decadeSnapshot: QuerySnapshot
+        val songwriterSnapshot: QuerySnapshot
+
+        val mergedSnapshots = mutableListOf<DocumentSnapshot>()
+
+        if(!genreOptions.contains("NoneSelected")){
+            genreQuery = genreQuery.whereIn("genre", genreOptions)
+            genreSnapshot = genreQuery.get().await()
+            mergedSnapshots.addAll(genreSnapshot.documents)
+            check = true
+        }
+
+        if(!decadeOptions.contains("NoneSelected")){
+
+            val sortedDecades = decadeOptions.map {
+                it.toInt()
+            }.sorted()
+
+
+            decadeQuery = decadeQuery.whereLessThanOrEqualTo("year", sortedDecades.last())
+                .whereGreaterThanOrEqualTo("year", sortedDecades.first())
+            decadeSnapshot = decadeQuery.get().await()
+            mergedSnapshots.addAll(decadeSnapshot.documents)
+            check = true
+        }
+
+
+        if(!songWriterOptions.contains("NoneSelected")){
+            songWriterQuery = songWriterQuery.whereIn("subtitle", songWriterOptions)
+            songwriterSnapshot = songWriterQuery.get().await()
+            mergedSnapshots.addAll(songwriterSnapshot.documents)
+            check = true
+        }
+
+        val songs = mergedSnapshots.distinctBy {
+            it.id
+        }.mapNotNull {
+            it.toObject(Song::class.java)
+        }
+
+        return if(check){
+            songs
+        }
+        else
+        {
+            songCollection.whereGreaterThanOrEqualTo("year", 2020).get().await().toObjects(Song::class.java)
+
+        }
+
     }
 
 

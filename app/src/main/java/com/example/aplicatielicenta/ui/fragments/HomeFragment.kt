@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.example.aplicatielicenta.R
 import com.example.aplicatielicenta.adapters.AlbumAdapter
+import com.example.aplicatielicenta.adapters.AllSongsAdapter
 import com.example.aplicatielicenta.adapters.SongAdapter
 import com.example.aplicatielicenta.data.Album
 import com.example.aplicatielicenta.data.Song
@@ -47,6 +48,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var albumAdapter: AlbumAdapter
     private lateinit var albumList: List<Album>
 
+    private lateinit var allSongsAdapter: AllSongsAdapter
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
@@ -55,7 +58,19 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         rvAlbum = view.findViewById(R.id.rv_albums)
         allSongsProgressBar = view.findViewById(R.id.allSongsProgressBar)
 
-        setupRecyclerView()
+        allSongsAdapter = AllSongsAdapter(glide)
+
+        lifecycleScope.launch(Dispatchers.IO){
+            allSongsAdapter.songs = allSongsAdapter.getAllSongs() as MutableList<Song>
+
+            withContext(Dispatchers.Main){
+                rvAllSongs.adapter = allSongsAdapter
+                rvAllSongs.layoutManager = LinearLayoutManager(requireContext())
+                allSongsAdapter.notifyDataSetChanged()
+            }
+        }
+
+        //setupRecyclerView()
         subscribeToObservers()
 
         lifecycleScope.launch(Dispatchers.Main){
@@ -72,7 +87,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         
 
 
-        songAdapter.setItemClickListener {
+//        songAdapter.setItemClickListener {
+//            mainViewModel.playOrToggleSong(it)
+//        }
+
+        allSongsAdapter.setItemClickListener {
             mainViewModel.playOrToggleSong(it)
         }
     }
@@ -104,7 +123,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun setupRecyclerView() = rvAllSongs.apply {
-        adapter = songAdapter
+        adapter = allSongsAdapter
         layoutManager = LinearLayoutManager(requireContext())
     }
 
@@ -114,7 +133,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 Status.SUCCESS -> {
                     allSongsProgressBar.isVisible = false
                     result.data?.let { songs ->
-                        songAdapter.songs = songs
+                        songAdapter.songs = songs as MutableList<Song>
                     }
                 }
                 Status.ERROR -> Unit

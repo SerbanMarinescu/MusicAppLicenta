@@ -3,6 +3,9 @@ package com.example.aplicatielicenta.ui.fragments
 import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationSet
+import android.view.animation.TranslateAnimation
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
@@ -104,7 +107,23 @@ class SongFragment : Fragment(R.layout.fragment_song) {
     private fun updateTitleAndSongImage(song: Song){
         val title = "${song.title} - ${song.subtitle}"
         songName.text = title
+        startScrollingAnimation()
         //glide.load(song.imageUrl).into(ivSongImage)
+    }
+
+    private fun startScrollingAnimation() {
+        val animation = TranslateAnimation(
+            Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, -1.0f,
+            Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f
+        )
+        animation.duration = 8000 // Duration for one complete animation cycle
+        animation.repeatCount = Animation.INFINITE // Infinite animation loop
+        animation.interpolator = null // Use default interpolator for linear animation
+
+        val animationSet = AnimationSet(true)
+        animationSet.addAnimation(animation)
+
+        songName.startAnimation(animationSet)
     }
 
     private fun subscribeToObservers(){

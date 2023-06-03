@@ -1,17 +1,22 @@
 package com.example.aplicatielicenta.adapters
 
+import android.content.Context
+import android.media.Image
 import android.support.v4.media.MediaBrowserCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.example.aplicatielicenta.R
 import com.example.aplicatielicenta.data.Song
 import com.example.aplicatielicenta.other.Constants.SONG_COLLECTION
+import com.example.aplicatielicenta.other.PlaylistClickListener
 import com.google.android.exoplayer2.MediaItem.fromUri
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.firebase.auth.FirebaseAuth
@@ -25,7 +30,9 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 
-class AllSongsAdapter @Inject constructor(private val glide: RequestManager) : RecyclerView.Adapter<AllSongsAdapter.AllSongsViewHolder>() {
+class AllSongsAdapter @Inject constructor(private val glide: RequestManager,
+                                          private val playlistClickListener: PlaylistClickListener
+) : RecyclerView.Adapter<AllSongsAdapter.AllSongsViewHolder>() {
 
     private val firestore = FirebaseFirestore.getInstance()
     private val songCollection = firestore.collection(SONG_COLLECTION)
@@ -45,6 +52,12 @@ class AllSongsAdapter @Inject constructor(private val glide: RequestManager) : R
         glide.load(song.imageUrl).into(holder.songImage)
 
         getLikes(song.mediaId, holder.likeBtn, song)
+
+
+        holder.playlistBtn.setOnClickListener{
+            showPlaylistOptionsDialog(holder.itemView.context, song)
+
+        }
 
         holder.likeBtn.setOnClickListener{
 
@@ -69,6 +82,23 @@ class AllSongsAdapter @Inject constructor(private val glide: RequestManager) : R
         }
 
     }
+
+    private fun showPlaylistOptionsDialog(context: Context, song: Song) {
+        val dialog = AlertDialog.Builder(context)
+            .setTitle("Add to Playlist")
+            .setPositiveButton("Create New Playlist") { dialog, _ ->
+                playlistClickListener.onCreateNewPlaylistClicked(song)
+                dialog.dismiss()
+            }
+            .setNegativeButton("Add to Existing Playlist") { dialog, _ ->
+                playlistClickListener.onAddToExistingPlaylistClicked(song)
+                dialog.dismiss()
+            }
+
+
+        dialog.show()
+    }
+
 
     private fun getLikes(mediaId: String, likeBtn: ImageView, song: Song) {
 
@@ -112,12 +142,14 @@ class AllSongsAdapter @Inject constructor(private val glide: RequestManager) : R
          var songName: TextView
          var songWriter: TextView
          var likeBtn: ImageView
+         val playlistBtn: ImageView
 
         init {
             songImage = itemView.findViewById(R.id.im_song)
             songName = itemView.findViewById(R.id.tw_song_name)
             songWriter = itemView.findViewById(R.id.tw_song_writer)
             likeBtn = itemView.findViewById(R.id.btn_like)
+            playlistBtn = itemView.findViewById(R.id.btn_playlist)
         }
     }
 

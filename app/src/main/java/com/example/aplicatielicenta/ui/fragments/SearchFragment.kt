@@ -53,7 +53,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         rvAllSongs = view.findViewById(R.id.rw_Search)
 
         rvAllSongs.layoutManager = LinearLayoutManager(context)
-        allSongsAdapter = AllSongsAdapter(glide)
+        //allSongsAdapter = AllSongsAdapter(glide)
 
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
 

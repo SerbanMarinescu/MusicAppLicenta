@@ -20,6 +20,11 @@ import com.example.aplicatielicenta.exoplayer.toSong
 import com.example.aplicatielicenta.other.Status
 import com.example.aplicatielicenta.ui.viewmodels.MainViewModel
 import com.example.aplicatielicenta.ui.viewmodels.SongViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.AndroidEntryPoint
 import me.tankery.lib.circularseekbar.CircularSeekBar
 import java.text.SimpleDateFormat
@@ -46,6 +51,7 @@ class SongFragment : Fragment(R.layout.fragment_song) {
     private lateinit var songDuration: TextView
     private lateinit var skipNext: ImageView
     private lateinit var skipPrevious: ImageView
+    private lateinit var likeBtn: ImageView
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -58,6 +64,7 @@ class SongFragment : Fragment(R.layout.fragment_song) {
         songDuration = view.findViewById(R.id.tw_song_duration)
         skipNext = view.findViewById(R.id.btn_skip)
         skipPrevious = view.findViewById(R.id.btn_previous)
+        likeBtn = view.findViewById(R.id.btn_Like)
 
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
 
@@ -102,14 +109,36 @@ class SongFragment : Fragment(R.layout.fragment_song) {
         skipPrevious.setOnClickListener{
             mainViewModel.skipToNextSong()
         }
+
+
     }
 
     private fun updateTitleAndSongImage(song: Song){
         val title = "${song.title} - ${song.subtitle}"
         songName.text = title
         startScrollingAnimation()
+
+        getLikes(song.mediaId, likeBtn, song)
+
+        likeBtn.setOnClickListener{
+            if(!song.isLiked){
+                likeBtn.setImageResource(R.drawable.heart_filled)
+                FirebaseDatabase.getInstance().reference.child("Liked")
+                    .child(FirebaseAuth.getInstance().currentUser!!.uid).child(song.mediaId).setValue(true)
+                song.isLiked = true
+            }
+            else{
+                likeBtn.setImageResource(R.drawable.heart_not_filled)
+                FirebaseDatabase.getInstance().reference.child("Liked")
+                    .child(FirebaseAuth.getInstance().currentUser!!.uid).child(song.mediaId).removeValue()
+                song.isLiked = false
+            }
+        }
+
         //glide.load(song.imageUrl).into(ivSongImage)
     }
+
+
 
     private fun startScrollingAnimation() {
         val animation = TranslateAnimation(
@@ -125,6 +154,7 @@ class SongFragment : Fragment(R.layout.fragment_song) {
 
         songName.startAnimation(animationSet)
     }
+
 
     private fun subscribeToObservers(){
         mainViewModel.mediaItems.observe(viewLifecycleOwner){
@@ -174,5 +204,30 @@ class SongFragment : Fragment(R.layout.fragment_song) {
     private fun setCurPlayerTimeToTextView(ms: Long) {
         val dateFormat = SimpleDateFormat("mm:ss", Locale.getDefault())
         curTimeSong.text = dateFormat.format(ms)
+    }
+
+    private fun getLikes(mediaId: String, likeBtn: ImageView, song: Song) {
+
+        val likeRef = FirebaseDatabase.getInstance().reference.child("Liked")
+            .child(FirebaseAuth.getInstance().currentUser!!.uid)
+
+        likeRef.addListenerForSingleValueEvent(object : ValueEventListener {
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.child(mediaId).exists()){
+                    likeBtn.setImageResource(R.drawable.heart_filled)
+                    song.isLiked = true
+                }
+                else{
+                    likeBtn.setImageResource(R.drawable.heart_not_filled)
+                    song.isLiked = false
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
     }
 }

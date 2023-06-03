@@ -100,7 +100,12 @@ class MainActivity : AppCompatActivity() {
         })
 
         swipeSongAdapter.setItemClickListener {
-            startActivity(Intent(this, SongDetailsActivity::class.java))
+
+             Intent(this, SongDetailsActivity::class.java).apply {
+                putExtra("likeStatus", it.isLiked)
+                startActivity(this)
+            }
+
         }
 
         profileImg.setOnClickListener{

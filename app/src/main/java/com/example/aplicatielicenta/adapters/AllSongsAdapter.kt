@@ -44,12 +44,55 @@ class AllSongsAdapter @Inject constructor(private val glide: RequestManager) : R
         holder.songWriter.text = song.subtitle
         glide.load(song.imageUrl).into(holder.songImage)
 
+        getLikes(song.mediaId, holder.likeBtn, song)
+
+        holder.likeBtn.setOnClickListener{
+
+            if(!song.isLiked){
+                holder.likeBtn.setImageResource(R.drawable.heart_filled)
+                FirebaseDatabase.getInstance().reference.child("Liked")
+                    .child(FirebaseAuth.getInstance().currentUser!!.uid).child(song.mediaId).setValue(true)
+                song.isLiked = true
+            }
+            else{
+                holder.likeBtn.setImageResource(R.drawable.heart_not_filled)
+                FirebaseDatabase.getInstance().reference.child("Liked")
+                    .child(FirebaseAuth.getInstance().currentUser!!.uid).child(song.mediaId).removeValue()
+                song.isLiked = false
+            }
+        }
+
         holder.itemView.setOnClickListener{
             onItemClickListener?.let {
                 it(song)
             }
         }
 
+    }
+
+    private fun getLikes(mediaId: String, likeBtn: ImageView, song: Song) {
+
+        val likeRef = FirebaseDatabase.getInstance().reference.child("Liked")
+            .child(FirebaseAuth.getInstance().currentUser!!.uid)
+
+        likeRef.addListenerForSingleValueEvent(object : ValueEventListener{
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.child(mediaId).exists()){
+                    likeBtn.setImageResource(R.drawable.heart_filled)
+                    song.isLiked = true
+                }
+                else{
+                    likeBtn.setImageResource(R.drawable.heart_not_filled)
+                    song.isLiked = false
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
     }
 
     override fun getItemCount(): Int {
@@ -68,11 +111,13 @@ class AllSongsAdapter @Inject constructor(private val glide: RequestManager) : R
          var songImage: ImageView
          var songName: TextView
          var songWriter: TextView
+         var likeBtn: ImageView
 
         init {
             songImage = itemView.findViewById(R.id.im_song)
             songName = itemView.findViewById(R.id.tw_song_name)
             songWriter = itemView.findViewById(R.id.tw_song_writer)
+            likeBtn = itemView.findViewById(R.id.btn_like)
         }
     }
 

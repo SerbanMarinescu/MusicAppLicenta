@@ -2,7 +2,6 @@ package com.example.aplicatielicenta.ui.fragments
 
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import androidx.core.view.isVisible
@@ -41,7 +40,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     lateinit var mainViewModel: MainViewModel
 
-    private lateinit var rvAllSongs: RecyclerView
+    private lateinit var rvRecommended: RecyclerView
     private lateinit var rvAlbum: RecyclerView
     private lateinit var allSongsProgressBar: ProgressBar
     
@@ -54,7 +53,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
 
-        rvAllSongs = view.findViewById(R.id.rv_recommended)
+        rvRecommended = view.findViewById(R.id.rv_recommended)
         rvAlbum = view.findViewById(R.id.rv_albums)
         allSongsProgressBar = view.findViewById(R.id.allSongsProgressBar)
 
@@ -64,8 +63,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             allSongsAdapter.songs = allSongsAdapter.getAllSongs() as MutableList<Song>
 
             withContext(Dispatchers.Main){
-                rvAllSongs.adapter = allSongsAdapter
-                rvAllSongs.layoutManager = LinearLayoutManager(requireContext())
+                rvRecommended.adapter = allSongsAdapter
+                rvRecommended.layoutManager = LinearLayoutManager(requireContext())
                 allSongsAdapter.notifyDataSetChanged()
             }
         }
@@ -122,7 +121,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         return@withContext albums
     }
 
-    private fun setupRecyclerView() = rvAllSongs.apply {
+    private fun setupRecyclerView() = rvRecommended.apply {
         adapter = allSongsAdapter
         layoutManager = LinearLayoutManager(requireContext())
     }

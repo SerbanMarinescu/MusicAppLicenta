@@ -43,6 +43,30 @@
 
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/btn_like"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/heart_not_filled"
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            >
+
+        </ImageView>
+
+        <ImageView
+            android:id="@+id/btn_playlist"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/playlist_add"
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            >
+
+        </ImageView>
+
 
     </LinearLayout>
 

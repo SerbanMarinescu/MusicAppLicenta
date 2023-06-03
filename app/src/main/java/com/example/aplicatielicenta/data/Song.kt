@@ -8,5 +8,6 @@ data class Song(
     val songUrl: String = "",
     val imageUrl: String = "",
     val genre: String = "",
-    val year: Long = 0
+    val year: Long = 0,
+    var isLiked: Boolean = false
 )

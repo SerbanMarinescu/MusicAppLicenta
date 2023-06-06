@@ -1,31 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    tools:context=".PlaylistActivity">
 
     <TextView
-        android:id="@+id/etLibrary"
+        android:id="@+id/etPlaylistName"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="LIBRARY"
-        android:textAlignment="center"
-        android:textSize="20sp"
         android:layout_marginTop="10dp"
-        >
+        android:text="PlaylistName"
+        android:textAlignment="center"
+        android:textSize="20sp">
 
     </TextView>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvLibrary"
+        android:id="@+id/rvPlaylists"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/etLibrary"
+        android:layout_below="@+id/etPlaylistName"
         android:layout_marginStart="5dp"
-        tools:listitem="@layout/playlist_layout">
+        tools:listitem="@layout/song_layout">
 
     </androidx.recyclerview.widget.RecyclerView>
-
-
 
 </RelativeLayout>

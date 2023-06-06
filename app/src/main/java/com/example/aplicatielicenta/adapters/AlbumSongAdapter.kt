@@ -1,6 +1,7 @@
 package com.example.aplicatielicenta.adapters
 
 import android.content.Context
+import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,10 +29,11 @@ import kotlinx.coroutines.withContext
 import org.w3c.dom.Text
 import javax.inject.Inject
 
-class AlbumSongAdapter @Inject constructor(private val glide: RequestManager, private val songList: List<Song>,
-                                           private val playlistClickListener: PlaylistClickListener
-):
-    RecyclerView.Adapter<AlbumSongAdapter.AlbumSongViewHolder>() {
+class AlbumSongAdapter @Inject constructor(private val glide: RequestManager, private val songList: MutableList<Song>,
+                                           private val playlistClickListener: PlaylistClickListener,
+                                           private val isPlaylist: Boolean = false,
+                                           private val playlistName: String
+): RecyclerView.Adapter<AlbumSongAdapter.AlbumSongViewHolder>() {
 
 
 
@@ -48,6 +50,21 @@ class AlbumSongAdapter @Inject constructor(private val glide: RequestManager, pr
         holder.songWriter.text = song.subtitle
 
         glide.load(song.imageUrl).into(holder.songImage)
+
+        if(isPlaylist){
+            holder.removeSong.apply {
+                visibility = View.VISIBLE
+                setOnClickListener{
+                    removeSong(song)
+                    songList.remove(song)
+                    notifyDataSetChanged()
+                }
+            }
+        }
+        else{
+            holder.removeSong.visibility = View.GONE
+        }
+
 
         holder.playlistBtn.setOnClickListener{
             showPlaylistOptionsDialog(holder.itemView.context, song)
@@ -77,6 +94,11 @@ class AlbumSongAdapter @Inject constructor(private val glide: RequestManager, pr
                 it(song)
             }
         }
+    }
+
+    private fun removeSong(song: Song) {
+        val ref = FirebaseDatabase.getInstance().reference.child("Playlists")
+            .child(FirebaseAuth.getInstance().currentUser!!.uid).child(playlistName).child(song.mediaId).removeValue()
     }
 
     private fun showPlaylistOptionsDialog(context: Context, song: Song) {
@@ -136,6 +158,7 @@ class AlbumSongAdapter @Inject constructor(private val glide: RequestManager, pr
         val songImage: ImageView
         var likeBtn: ImageView
         val playlistBtn: ImageView
+        val removeSong: ImageView
 
         init {
             songName = itemView.findViewById(R.id.tw_song_name)
@@ -143,6 +166,7 @@ class AlbumSongAdapter @Inject constructor(private val glide: RequestManager, pr
             songImage = itemView.findViewById(R.id.im_song)
             likeBtn = itemview.findViewById(R.id.btn_like)
             playlistBtn = itemview.findViewById(R.id.btn_playlist)
+            removeSong = itemview.findViewById(R.id.btnRemoveSong)
         }
     }
 

@@ -6,13 +6,12 @@ import android.view.LayoutInflater
 import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.example.aplicatielicenta.adapters.AlbumSongAdapter
-import com.example.aplicatielicenta.adapters.SongAdapter
 import com.example.aplicatielicenta.data.Song
 import com.example.aplicatielicenta.other.Constants.SONG_COLLECTION
 import com.example.aplicatielicenta.other.PlaylistClickListener
@@ -25,7 +24,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
-import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,83 +34,49 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 @AndroidEntryPoint
-class AlbumActivity : AppCompatActivity(), PlaylistClickListener {
+class PlaylistActivity : AppCompatActivity(), PlaylistClickListener {
 
     @Inject
     lateinit var glide: RequestManager
 
-    @Inject
-    lateinit var songAdapter: SongAdapter
-
-    private lateinit var albumImg: CircleImageView
-    private lateinit var albumName: TextView
-    private lateinit var albumRv: RecyclerView
-    private lateinit var albumSongAdapter: AlbumSongAdapter
+    private lateinit var playlistName: String
 
     private val mainViewModel: MainViewModel by viewModels()
 
-    private var fireStore = FirebaseFirestore.getInstance()
-    private var songCollection = fireStore.collection(SONG_COLLECTION)
+    private lateinit var playlistNameTW: TextView
+    private lateinit var rvPlaylist: RecyclerView
+    private lateinit var songList: MutableList<Song>
+    private lateinit var songAdapterPlaylist: AlbumSongAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_album)
+        setContentView(R.layout.activity_playlist)
 
-        albumImg = findViewById(R.id.ivAlbum)
-        albumName = findViewById(R.id.etAlbum)
-        albumRv = findViewById(R.id.rvSongGenres)
+        playlistNameTW = findViewById(R.id.etPlaylistName)
+        rvPlaylist = findViewById(R.id.rvPlaylists)
 
+        playlistName = intent.getStringExtra("PlaylistName")!!
 
-        albumRv.layoutManager = LinearLayoutManager(this)
+        playlistNameTW.text = playlistName
+        rvPlaylist.layoutManager = LinearLayoutManager(this)
 
-
-        val img = intent.getIntExtra("albumImage",0)
-        val name = intent.getStringExtra("albumName")
-
-        var songs: List<Song>
 
         lifecycleScope.launch(Dispatchers.IO){
-            songs = fetchData(name!!)
+            songList = getSongs() as MutableList<Song>
 
             withContext(Dispatchers.Main){
-                albumSongAdapter = AlbumSongAdapter(glide,
-                    songs as MutableList<Song>, this@AlbumActivity, false, "")
-                albumRv.adapter = albumSongAdapter
-                albumSongAdapter.notifyDataSetChanged()
+                songAdapterPlaylist = AlbumSongAdapter(glide, songList, this@PlaylistActivity, true, playlistName)
+                rvPlaylist.adapter = songAdapterPlaylist
 
-                albumSongAdapter.setItemClickListener {
+                songAdapterPlaylist.setItemClickListener {
                     mainViewModel.playOrToggleSong(it)
                 }
             }
+
         }
 
 
-        albumName.text = name
-        glide.load(img).into(albumImg)
 
-        subscribeToObservers()
-    }
-
-
-    private fun subscribeToObservers(){
-        mainViewModel.mediaItems.observe(this){ result ->
-            when(result.status){
-                Status.SUCCESS -> {
-                    //allSongsProgressBar.isVisible = false
-                    result.data?.let { songs ->
-                        songAdapter.songs = songs
-                        //songAdapter.notifyDataSetChanged()
-                    }
-                }
-                Status.ERROR -> Unit
-                Status.LOADING -> Unit //allSongsProgressBar.isVisible = true
-            }
-        }
-    }
-
-    suspend fun fetchData(genre: String): List<Song>{
-
-        return songCollection.whereEqualTo("genre", genre).get().await().toObjects(Song::class.java)
     }
 
     override fun onAddToExistingPlaylistClicked(song: Song) {
@@ -121,6 +85,44 @@ class AlbumActivity : AppCompatActivity(), PlaylistClickListener {
 
     override fun onCreateNewPlaylistClicked(song: Song) {
         showNewPlaylistNameDialog(song)
+    }
+
+
+    suspend fun getSongsIds(): List<String> = suspendCoroutine{ continuation ->
+        val playlistRef = FirebaseDatabase.getInstance().reference.child("Playlists")
+            .child(FirebaseAuth.getInstance().currentUser!!.uid).child(playlistName)
+
+        val songIdList = mutableListOf<String>()
+
+        playlistRef.addListenerForSingleValueEvent(object : ValueEventListener{
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists()){
+                    songIdList.clear()
+                    for(snap in snapshot.children){
+                        val songId = snap.key
+                        songIdList.add(songId!!)
+                    }
+                    continuation.resume(songIdList)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+    }
+
+    suspend fun getSongs(): List<Song>{
+
+        val songIds = getSongsIds()
+
+        val fireStore = FirebaseFirestore.getInstance().collection(SONG_COLLECTION)
+
+        val songCollection = fireStore.whereIn("mediaId", songIds)
+
+        return songCollection.get().await().toObjects(Song::class.java)
     }
 
     private fun showNewPlaylistNameDialog(song: Song) {
@@ -161,7 +163,7 @@ class AlbumActivity : AppCompatActivity(), PlaylistClickListener {
 
             withContext(Dispatchers.Main){
                 // Create an ArrayAdapter to populate the ListView with playlist names
-                val adapter = ArrayAdapter(this@AlbumActivity, android.R.layout.simple_list_item_1, playlistNames)
+                val adapter = ArrayAdapter(this@PlaylistActivity, android.R.layout.simple_list_item_1, playlistNames)
                 listViewPlaylists.adapter = adapter
 
                 // Set the item click listener for the ListView
@@ -169,7 +171,7 @@ class AlbumActivity : AppCompatActivity(), PlaylistClickListener {
                     val selectedPlaylist = playlistNames[position]
                     // Handle the selection (e.g., add the song to the selected playlist)
                     addToPlaylist(selectedPlaylist, song)
-                    Toast.makeText(this@AlbumActivity, "Successfully added to $selectedPlaylist playlist!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@PlaylistActivity, "Successfully added to $selectedPlaylist playlist!", Toast.LENGTH_LONG).show()
 
                 }
 
@@ -261,4 +263,6 @@ class AlbumActivity : AppCompatActivity(), PlaylistClickListener {
         FirebaseDatabase.getInstance().reference.child("Playlists")
             .child(FirebaseAuth.getInstance().currentUser!!.uid).child(playlistName).setValue(songToAdd)
     }
+
+
 }

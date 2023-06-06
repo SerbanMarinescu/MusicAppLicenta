@@ -37,16 +37,5 @@ object AppModule {
             .diskCacheStrategy(DiskCacheStrategy.DATA)
     )
 
-//    @Singleton
-//    @Provides
-//    fun provideOptionsRepository(): OptionsRepository = OptionsRepository()
-//
-//    @Provides
-//    @Singleton
-//    fun provideOptionsList(optionsRepository: OptionsRepository): List<String> {
-//        return runBlocking {
-//            optionsRepository.getOptions()
-//        }
-//    }
 
 }

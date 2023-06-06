@@ -8,9 +8,19 @@
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:text="Playlist"
-        android:textSize="20sp"
-        >
+        android:textSize="20sp">
 
     </TextView>
+
+    <ImageView
+        android:id="@+id/delete_playlist"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_toEndOf="@+id/etPlaylist"
+        android:src="@drawable/delete"
+        android:layout_centerInParent="true"
+        >
+
+    </ImageView>
 
 </RelativeLayout>

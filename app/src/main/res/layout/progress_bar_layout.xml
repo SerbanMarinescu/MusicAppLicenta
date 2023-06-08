@@ -21,9 +21,8 @@
         android:id="@+id/ProgressBar_LogIn"
         android:layout_width="300dp"
         android:layout_height="100dp"
-        android:layout_centerHorizontal="true"
         android:layout_below="@+id/progressBar_title"
-        >
+        android:layout_centerHorizontal="true">
 
     </ProgressBar>
 

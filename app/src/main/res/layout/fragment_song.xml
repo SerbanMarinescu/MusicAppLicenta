@@ -2,19 +2,37 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:background="@color/appColor"
     android:layout_height="match_parent">
+
 
     <TextView
         android:id="@+id/tw_song_name"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
         android:text="Song Name"
         android:textAlignment="center"
+        android:textColor="@color/white"
+
         android:textSize="30sp">
 
     </TextView>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/music_disc">
+
+    </de.hdodenhof.circleimageview.CircleImageView>
 
 
     <me.tankery.lib.circularseekbar.CircularSeekBar
@@ -24,11 +42,10 @@
         android:layout_centerInParent="true"
         android:layout_marginBottom="20dp"
         android:rotation="145"
-        app:cs_circle_fill="#818181"
-        app:cs_circle_progress_color="@color/teal_700"
+        app:cs_circle_progress_color="#1EA406"
         app:cs_circle_stroke_width="10dp"
         app:cs_circle_style="round"
-        app:cs_pointer_color="@color/black"
+        app:cs_pointer_color="#1EA406"
         app:cs_pointer_stroke_width="20dp"
         app:cs_progress="0"
         app:cs_start_angle="-20">
@@ -40,6 +57,7 @@
         android:layout_width="125dp"
         android:layout_height="125dp"
         android:layout_centerInParent="true"
+        app:tint="@color/white"
         android:src="@drawable/img_play">
 
     </ImageView>
@@ -52,9 +70,8 @@
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
-        android:src="@drawable/heart_not_filled"
-
-        >
+        android:scaleType="centerCrop"
+        android:src="@drawable/heart_not_filled">
 
     </ImageView>
 
@@ -67,6 +84,7 @@
         >
 
         <TextView
+            android:textColor="@color/white"
             android:id="@+id/tw_cur_time"
             android:layout_width="0dp"
             android:layout_height="30dp"
@@ -81,6 +99,7 @@
         <TextView
             android:id="@+id/tw_song_duration"
             android:layout_width="0dp"
+            android:textColor="@color/white"
             android:layout_height="30dp"
             android:text="00:00"
             android:layout_weight="1"
@@ -102,6 +121,7 @@
         >
 
         <ImageView
+            app:tint="@color/white"
             android:id="@+id/btn_skip"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -117,6 +137,7 @@
             android:layout_height="50dp"
             android:src="@drawable/img_skip_next"
             android:layout_weight="1"
+            app:tint="@color/white"
             >
 
         </ImageView>

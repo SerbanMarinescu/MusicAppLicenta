@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/appColor"
     tools:context=".SgnUpActivity">
 
 
@@ -12,9 +13,9 @@
         android:layout_width="wrap_content"
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="200dp"
-        android:src="@drawable/music_template"
-        >
+        android:layout_marginTop="170dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/app_logo">
 
     </ImageView>
 
@@ -24,7 +25,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/ivApp"
         android:layout_centerHorizontal="true"
-        android:hint="Username...">
+        android:layout_marginTop="25dp"
+        android:backgroundTint="@color/white"
+        android:hint="Username..."
+        android:textColor="@color/white"
+        android:textColorHint="@color/white">
 
     </EditText>
 
@@ -34,21 +39,25 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/etUsername_SgnUp"
         android:layout_centerHorizontal="true"
+        android:backgroundTint="@color/white"
         android:hint="Email..."
         android:inputType="textEmailAddress"
-        >
+        android:textColor="@color/white"
+        android:textColorHint="@color/white">
 
     </EditText>
 
     <EditText
         android:id="@+id/etPassword_SgnUp"
         android:layout_width="250dp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/white"
+        android:textColorHint="@color/white"
         android:layout_height="wrap_content"
         android:layout_below="@+id/etEmail_SgnUp"
         android:layout_centerHorizontal="true"
         android:hint="Password..."
-        android:inputType="textPassword"
-        >
+        android:inputType="textPassword">
 
     </EditText>
 
@@ -58,9 +67,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/etPassword_SgnUp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="#4473d0"
         android:text="Create Account"
-        android:textAllCaps="false">
+        android:textAllCaps="false"
+        android:textStyle="bold">
 
     </Button>
 
@@ -72,6 +83,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="50dp"
+        android:textStyle="bold"
+        android:backgroundTint="#4473d0"
         android:text="Already have an account?"
         android:textAllCaps="false">
 

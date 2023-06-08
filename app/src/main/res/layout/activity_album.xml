@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/appColor"
     tools:context=".AlbumActivity">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -15,6 +16,7 @@
     </de.hdodenhof.circleimageview.CircleImageView>
 
     <TextView
+        android:textColor="@color/white"
         android:id="@+id/etAlbum"
         android:layout_width="match_parent"
         android:layout_height="80dp"

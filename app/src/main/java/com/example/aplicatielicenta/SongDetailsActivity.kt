@@ -29,4 +29,9 @@ class SongDetailsActivity : AppCompatActivity() {
             .replace(R.id.fragment_container_song, songFragment)
             .commit()
     }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+    }
 }

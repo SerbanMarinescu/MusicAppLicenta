@@ -1,25 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/appColor"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
     <TextView
         android:id="@+id/etPlaylist"
         android:layout_width="250dp"
         android:layout_height="50dp"
+        android:textColor="@color/white"
         android:text="Playlist"
         android:textSize="20sp">
 
     </TextView>
 
     <ImageView
+        app:tint="@color/white"
         android:id="@+id/delete_playlist"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_toEndOf="@+id/etPlaylist"
-        android:src="@drawable/delete"
         android:layout_centerInParent="true"
-        >
+        android:layout_toEndOf="@+id/etPlaylist"
+        android:src="@drawable/delete">
 
     </ImageView>
 

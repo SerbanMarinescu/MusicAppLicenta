@@ -10,12 +10,19 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import com.bumptech.glide.RequestManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
+import dagger.hilt.android.AndroidEntryPoint
 import de.hdodenhof.circleimageview.CircleImageView
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class EditAccountActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var glide: RequestManager
 
     private lateinit var profileImage: CircleImageView
     private lateinit var username: EditText
@@ -64,11 +71,12 @@ class EditAccountActivity : AppCompatActivity() {
             storageRef.downloadUrl.addOnSuccessListener{
 
                 val updateMap = mapOf<String, Any>(
-                    "imageUrl" to it.toString()
+                    "imageUrl" to it.toString(),
                     //"username" to username.text.toString()
                 )
 
                 userRef.updateChildren(updateMap)
+                glide.load(selectedImageUri).into(profileImage)
             }.addOnCompleteListener {
                 dialog.dismiss()
             }

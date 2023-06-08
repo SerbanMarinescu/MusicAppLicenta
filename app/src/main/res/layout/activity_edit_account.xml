@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/appColor"
     tools:context=".EditAccountActivity">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -25,6 +26,9 @@
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/white"
+        android:textColorHint="@color/white"
         android:hint="Username"
         android:textSize="20sp">
 
@@ -38,6 +42,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
         android:text="Save Changes"
+        android:backgroundTint="#4473d0"
+        android:textStyle="bold"
         android:textAllCaps="false">
 
     </Button>

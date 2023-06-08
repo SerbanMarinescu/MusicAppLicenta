@@ -12,31 +12,31 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:orientation="horizontal"
-        android:background="@color/purple_500"
-        >
+        android:background="@color/appColor"
+        android:orientation="horizontal">
 
         <TextView
+            android:textColor="@color/white"
             android:id="@+id/tw_main"
-            android:layout_marginStart="20dp"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            android:text="Hello!"
-            android:textSize="25sp"
             android:layout_gravity="start"
+            android:layout_marginStart="20dp"
             android:layout_weight="4"
-            >
+            android:text="Hello!"
+            android:textSize="25sp">
 
         </TextView>
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_profile"
             android:layout_width="0dp"
+            android:scaleType="centerCrop"
+            android:layout_marginTop="5dp"
             android:layout_height="50dp"
-            android:src="@drawable/music_template"
             android:layout_gravity="end"
             android:layout_weight="1"
-            >
+            android:src="@drawable/music_template">
 
         </de.hdodenhof.circleimageview.CircleImageView>
 
@@ -67,7 +67,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_above="@+id/bottom_nav_view"
-        android:background="@color/purple_200"
+        android:background="@color/appColor"
         >
 
         <ImageView
@@ -91,6 +91,7 @@
         </androidx.viewpager2.widget.ViewPager2>
 
         <ImageView
+            app:tint="@color/white"
             android:id="@+id/ivPlayPause"
             android:layout_width="0dp"
             android:layout_height="50dp"
@@ -110,8 +111,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/teal_700"
-        app:itemIconTint="@color/black"
+        android:background="@color/appColor"
+        app:itemIconTint="#2aa6e4"
         app:itemTextColor="@color/white"
         app:menu="@menu/bottom_nav_view_menu">
 

@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -79,6 +78,7 @@ class AlbumActivity : AppCompatActivity(), PlaylistClickListener {
                     songs as MutableList<Song>, this@AlbumActivity, false, "")
                 albumRv.adapter = albumSongAdapter
                 albumSongAdapter.notifyDataSetChanged()
+
 
                 albumSongAdapter.setItemClickListener {
                     mainViewModel.playOrToggleSong(it)

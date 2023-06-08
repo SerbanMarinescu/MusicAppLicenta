@@ -231,7 +231,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), PlaylistClickListener {
 
     }
 
-    private suspend fun getPlaylistNames(): MutableList<String> = suspendCoroutine{ continuation ->
+    private suspend fun getPlaylistNames(): List<String> = suspendCoroutine{ continuation ->
 
         val playlistRef = FirebaseDatabase.getInstance().reference.child("Playlists")
             .child(FirebaseAuth.getInstance().currentUser!!.uid)
@@ -249,12 +249,13 @@ class HomeFragment : Fragment(R.layout.fragment_home), PlaylistClickListener {
                     continuation.resume(playlistNames)
                 }
                 else{
-                    continuation.resume(emptyList<String>() as MutableList<String>)
+                    Toast.makeText(context, "You haven't created any playlists yet!", Toast.LENGTH_SHORT).show()
+                    continuation.resume(emptyList())
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                continuation.resume(emptyList<String>() as MutableList<String>)
+                continuation.resume(emptyList())
             }
 
         })

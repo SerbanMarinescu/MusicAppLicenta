@@ -1,5 +1,7 @@
 package com.example.aplicatielicenta.ui.fragments
 
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat
 import android.view.View
@@ -52,6 +54,8 @@ class SongFragment : Fragment(R.layout.fragment_song) {
     private lateinit var skipNext: ImageView
     private lateinit var skipPrevious: ImageView
     private lateinit var likeBtn: ImageView
+
+    private var scrollingAnimation: ObjectAnimator? = null
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -116,6 +120,11 @@ class SongFragment : Fragment(R.layout.fragment_song) {
     private fun updateTitleAndSongImage(song: Song){
         val title = "${song.title} - ${song.subtitle}"
         songName.text = title
+        
+        if (scrollingAnimation?.isRunning == true) {
+            stopScrollingAnimation()
+        }
+
         startScrollingAnimation()
 
         getLikes(song.mediaId, likeBtn, song)
@@ -135,24 +144,55 @@ class SongFragment : Fragment(R.layout.fragment_song) {
             }
         }
 
-        //glide.load(song.imageUrl).into(ivSongImage)
+        //glide.load(song.imageUrl).into(songImage)
     }
 
 
 
     private fun startScrollingAnimation() {
-        val animation = TranslateAnimation(
-            Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, -1.0f,
-            Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f
-        )
-        animation.duration = 8000 // Duration for one complete animation cycle
-        animation.repeatCount = Animation.INFINITE // Infinite animation loop
-        animation.interpolator = null // Use default interpolator for linear animation
+//        val animation = TranslateAnimation(
+//            Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, -1.0f,
+//            Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f
+//        )
+//        animation.duration = 8000 // Duration for one complete animation cycle
+//        animation.repeatCount = Animation.INFINITE // Infinite animation loop
+//        animation.interpolator = null // Use default interpolator for linear animation
+//
+//        val animationSet = AnimationSet(true)
+//        animationSet.addAnimation(animation)
+//
+//        songName.startAnimation(animationSet)
 
-        val animationSet = AnimationSet(true)
-        animationSet.addAnimation(animation)
+//        songName.clearAnimation()
+//        songName.isSelected = true // Enable marquee
+//
+//         songName.width.toFloat().let { width ->
+//            ObjectAnimator.ofFloat(songName, "translationX", width, -width)
+//                .apply {
+//                    duration = 8000 // Adjust the duration as needed
+//                    repeatCount = ValueAnimator.INFINITE // Repeat the animation indefinitely
+//                    repeatMode = ValueAnimator.RESTART // Restart the animation from the beginning
+//                    start()
+//                }
+//        }
 
-        songName.startAnimation(animationSet)
+        songName.clearAnimation()
+        songName.isSelected = true // Enable marquee
+
+        val width = songName.width.toFloat()
+        scrollingAnimation = ObjectAnimator.ofFloat(songName, "translationX", width, -width).apply {
+            duration = 8000 // Adjust the duration as needed
+            repeatCount = ValueAnimator.INFINITE // Repeat the animation indefinitely
+            repeatMode = ValueAnimator.RESTART // Restart the animation from the beginning
+            start() // Start the animation
+        }
+
+    }
+
+    private fun stopScrollingAnimation() {
+        scrollingAnimation?.cancel() // Cancel the animation if it's running
+        songName.clearAnimation()
+        songName.isSelected = false // Disable marquee
     }
 
 

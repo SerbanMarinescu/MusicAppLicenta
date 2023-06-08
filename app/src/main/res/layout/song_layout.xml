@@ -8,13 +8,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:background="@color/purple_200"
+        android:background="#2aa6e4"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/im_song"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:scaleType="centerCrop"
             android:src="@drawable/music_template">
 
         </ImageView>
@@ -47,11 +48,10 @@
             android:id="@+id/btn_like"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/heart_not_filled"
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
-            >
+            android:src="@drawable/heart_not_filled">
 
         </ImageView>
 
@@ -59,11 +59,10 @@
             android:id="@+id/btn_playlist"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/playlist_add"
             android:layout_gravity="center"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="5dp"
-            >
+            android:src="@drawable/playlist_add">
 
         </ImageView>
 
@@ -71,12 +70,11 @@
             android:id="@+id/btnRemoveSong"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/delete"
             android:layout_gravity="center"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="5dp"
-            android:visibility="gone"
-            >
+            android:src="@drawable/delete"
+            android:visibility="gone">
 
         </ImageView>
 

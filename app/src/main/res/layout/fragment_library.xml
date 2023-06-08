@@ -2,17 +2,32 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/appColor"
     xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
         android:id="@+id/etLibrary"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_marginTop="10dp"
         android:text="LIBRARY"
         android:textAlignment="center"
-        android:textSize="20sp"
-        android:layout_marginTop="10dp"
-        >
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:textStyle="bold">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/etRandom"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etLibrary"
+        android:layout_marginStart="15dp"
+        android:text="Playlists"
+        android:textColor="#9C9C9C"
+        android:textSize="25sp"
+        android:textStyle="bold">
 
     </TextView>
 
@@ -20,8 +35,9 @@
         android:id="@+id/rvLibrary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/etLibrary"
-        android:layout_marginStart="5dp"
+        android:layout_below="@+id/etRandom"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="30dp"
         tools:listitem="@layout/playlist_layout">
 
     </androidx.recyclerview.widget.RecyclerView>

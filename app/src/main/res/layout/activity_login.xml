@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/appColor"
+
     tools:context=".LoginActivity">
 
 
@@ -12,21 +14,24 @@
         android:layout_width="wrap_content"
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="200dp"
-        android:src="@drawable/music_template"
-        >
+        android:layout_marginTop="170dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/app_logo">
 
     </ImageView>
 
     <EditText
+        android:layout_marginTop="25dp"
         android:id="@+id/etEmail_LogIn"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ivApp"
         android:layout_centerHorizontal="true"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/white"
+        android:textColorHint="@color/white"
         android:hint="Email..."
-        android:inputType="textEmailAddress"
-        >
+        android:inputType="textEmailAddress">
 
     </EditText>
 
@@ -36,6 +41,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/etEmail_LogIn"
         android:layout_centerHorizontal="true"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/white"
+        android:textColorHint="@color/white"
         android:hint="Password..."
         android:inputType="textPassword"
         >
@@ -43,15 +51,15 @@
     </EditText>
 
     <CheckBox
-        android:layout_below="@id/etPassword_LogIn"
         android:id="@+id/cbRemember"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Remember me"
+        android:layout_below="@id/etPassword_LogIn"
         android:layout_alignParentEnd="true"
-        android:textSize="15sp"
         android:layout_marginEnd="25dp"
-        >
+        android:text="Remember me"
+        android:textColor="@color/white"
+        android:textSize="15sp">
 
     </CheckBox>
 
@@ -61,10 +69,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/cbRemember"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:text="Log In"
-        android:textAllCaps="false"
-        >
+        android:textStyle="bold"
+        android:backgroundTint="#4473d0"
+        android:textAllCaps="false">
 
     </Button>
 
@@ -74,9 +83,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:text="Need account?"
         android:textAllCaps="false"
+        android:textStyle="bold"
+        android:backgroundTint="#4473d0"
         android:layout_marginBottom="50dp"
         >
 

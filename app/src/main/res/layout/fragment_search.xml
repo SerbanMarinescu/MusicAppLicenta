@@ -2,15 +2,18 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/appColor"
     xmlns:tools="http://schemas.android.com/tools">
 
     <EditText
-        android:layout_marginTop="10dp"
         android:id="@+id/et_Search"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/white"
+        android:textColorHint="@color/white"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:hint="Search for songs..."
-        >
+        android:layout_marginTop="10dp"
+        android:hint="Search for songs...">
 
     </EditText>
 

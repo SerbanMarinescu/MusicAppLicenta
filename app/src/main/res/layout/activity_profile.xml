@@ -33,8 +33,9 @@
     </Button>
 
     <LinearLayout
+        android:id="@+id/layoutProfile"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/btnEditAccount"
         android:layout_marginTop="20dp"
         android:orientation="vertical">
@@ -44,27 +45,37 @@
             android:layout_width="200dp"
             android:layout_height="50dp"
             android:layout_gravity="center"
-            android:textColor="@color/white"
             android:text="Username"
+            android:textColor="@color/white"
             android:textSize="20sp">
 
         </TextView>
 
         <TextView
-            android:layout_marginTop="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Liked Songs"
-            android:textSize="25sp"
-            android:textColor="#9C9C9C"
             android:layout_marginStart="20dp"
-            android:textStyle="bold"
-            >
+            android:layout_marginTop="20dp"
+            android:text="Liked Songs"
+            android:textColor="#9C9C9C"
+            android:textSize="25sp"
+            android:textStyle="bold">
 
         </TextView>
 
 
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvLikedSongs"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:layout_below="@+id/layoutProfile"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        tools:listitem="@layout/album_layout">
+
+    </androidx.recyclerview.widget.RecyclerView>
 
     <Button
         android:id="@+id/btn_logOut"

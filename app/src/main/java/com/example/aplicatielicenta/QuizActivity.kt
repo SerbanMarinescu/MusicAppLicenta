@@ -3,9 +3,8 @@ package com.example.aplicatielicenta
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.TextView
+import android.view.View
+import android.widget.*
 import com.example.aplicatielicenta.data.Quiz
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
@@ -18,6 +17,8 @@ class QuizActivity : AppCompatActivity() {
     private lateinit var option3: CheckBox
     private lateinit var option4: CheckBox
     private lateinit var submitBtn: Button
+    private lateinit var layoutCheckBox: LinearLayout
+    private lateinit var radioGroup: RadioGroup
     private lateinit var account: FirebaseAuth
 
     private val quiz: Quiz = Quiz()
@@ -35,6 +36,8 @@ class QuizActivity : AppCompatActivity() {
         option3 = findViewById(R.id.Option3)
         option4 = findViewById(R.id.Option4)
         submitBtn = findViewById(R.id.btnSubmit)
+        layoutCheckBox = findViewById(R.id.layout_options)
+        radioGroup = findViewById(R.id.rgOptions)
         account = FirebaseAuth.getInstance()
 
 
@@ -46,13 +49,28 @@ class QuizActivity : AppCompatActivity() {
 
             val userRef = FirebaseDatabase.getInstance().reference.child("Quiz").child(account.currentUser!!.uid)
 
-            val selectedOptions = listOption.filter {
-                it.isChecked
-            }.map {
-                it.text.toString()
+            if(count == 3){
+
+                var radioGroupOption = ""
+                val selectedOptionId = radioGroup.checkedRadioButtonId
+                val radioButton: RadioButton = findViewById(selectedOptionId)
+                radioGroupOption = radioButton.text.toString()
+
+                userRef.child("Question $count").setValue(radioGroupOption)
+
+            }
+            else {
+                val selectedOptions = listOption.filter {
+                    it.isChecked
+                }.map {
+                    it.text.toString()
+                }
+
+
+                userRef.child("Question $count").setValue(selectedOptions)
             }
 
-            userRef.child("Question $count").setValue(selectedOptions)
+
 
             questionIndex++
             count++
@@ -71,15 +89,28 @@ class QuizActivity : AppCompatActivity() {
         if(questionIndex < size){
             question.text = "Question [$count/$size] ${quiz.quizQuestions[questionIndex]}"
 
-            option1.text = quiz.quizOptions[questionIndex][0]
-            option2.text = quiz.quizOptions[questionIndex][1]
-            option3.text = quiz.quizOptions[questionIndex][2]
-            option4.text = quiz.quizOptions[questionIndex][3]
+            if(count == 3){
+                radioGroup.visibility = View.VISIBLE
+                layoutCheckBox.visibility = View.GONE
 
-            option1.isChecked = false
-            option2.isChecked = false
-            option3.isChecked = false
-            option4.isChecked = false
+
+            }
+            else{
+                radioGroup.visibility = View.GONE
+                layoutCheckBox.visibility = View.VISIBLE
+
+                option1.text = quiz.quizOptions[questionIndex][0]
+                option2.text = quiz.quizOptions[questionIndex][1]
+                option3.text = quiz.quizOptions[questionIndex][2]
+                option4.text = quiz.quizOptions[questionIndex][3]
+
+                option1.isChecked = false
+                option2.isChecked = false
+                option3.isChecked = false
+                option4.isChecked = false
+            }
+
+
         }
     }
 }

@@ -1,24 +1,19 @@
 package com.example.aplicatielicenta.adapters
 
 import android.content.Context
-import android.media.Image
-import android.support.v4.media.MediaBrowserCompat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.example.aplicatielicenta.R
 import com.example.aplicatielicenta.data.Song
 import com.example.aplicatielicenta.other.Constants.SONG_COLLECTION
 import com.example.aplicatielicenta.other.PlaylistClickListener
-import com.google.android.exoplayer2.MediaItem.fromUri
-import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.firestore.*
@@ -173,16 +168,26 @@ class AllSongsAdapter @Inject constructor(private val glide: RequestManager,
             questionRef.addListenerForSingleValueEvent(object : ValueEventListener {
 
                 override fun onDataChange(snapshot: DataSnapshot) {
+
                     val optionsList = mutableListOf<String>()
 
-                    if (snapshot.exists()) {
-                        for (snap in snapshot.children) {
-                            val value = snap.getValue(String::class.java)
+                    if(snapshot.exists()){
+                        if(snapshot.hasChildren()){
+                            for (snap in snapshot.children) {
+                                val value = snap.getValue(String::class.java)
+                                value?.let {
+                                    optionsList.add(value)
+                                }
+                            }
+                        }
+                        else{
+                            val value = snapshot.getValue(String::class.java)
                             value?.let {
                                 optionsList.add(value)
                             }
                         }
-                    } else {
+                    }
+                    else{
                         optionsList.add("NoneSelected")
                     }
 
@@ -204,7 +209,7 @@ class AllSongsAdapter @Inject constructor(private val glide: RequestManager,
         val quizRef = FirebaseDatabase.getInstance().reference.child("Quiz")
             .child(FirebaseAuth.getInstance().currentUser!!.uid)
 
-        val questions = listOf("Question 1", "Question 2", "Question 3")
+        val questions = listOf("Question 1", "Question 2", "Question 3", "Question 4")
 
         for (question in questions) {
             val questionRef = quizRef.child(question)
@@ -223,19 +228,29 @@ class AllSongsAdapter @Inject constructor(private val glide: RequestManager,
 
         var check = false
 
-        val genreOptions = options[0]
-        val decadeOptions = options[1]
-        val songWriterOptions = options[2]
+        val purposeOptions = options[0]
+        val genreOptions = options[1]
+        val typeOptions = options[2]
+        val songWriterOptions = options[3]
 
+        var purposeQuery: Query = songCollection
         var genreQuery: Query = songCollection
-        var decadeQuery: Query = songCollection
+        var typeQuery: Query = songCollection
         var songWriterQuery: Query = songCollection
 
+        val purposeSnapshot: QuerySnapshot
         val genreSnapshot: QuerySnapshot
-        val decadeSnapshot: QuerySnapshot
+        val typeSnapshot: QuerySnapshot
         val songwriterSnapshot: QuerySnapshot
 
         val mergedSnapshots = mutableListOf<DocumentSnapshot>()
+
+        if(!purposeOptions.contains("NoneSelected")){
+            purposeQuery = purposeQuery.whereIn("purpose", purposeOptions)
+            purposeSnapshot = purposeQuery.get().await()
+            mergedSnapshots.addAll(purposeSnapshot.documents)
+            check = true
+        }
 
         if(!genreOptions.contains("NoneSelected")){
             genreQuery = genreQuery.whereIn("genre", genreOptions)
@@ -244,18 +259,30 @@ class AllSongsAdapter @Inject constructor(private val glide: RequestManager,
             check = true
         }
 
-        if(!decadeOptions.contains("NoneSelected")){
+//        if(!typeOptions.contains("I don't have a preference")){
+//
+//            typeQuery = typeQuery.whereIn("type", typeOptions)
+//            typeSnapshot = typeQuery.get().await()
+//            mergedSnapshots.addAll(typeSnapshot.documents)
+//            check = true
+//        }
 
-            val sortedDecades = decadeOptions.map {
-                it.toInt()
-            }.sorted()
+        when{
+            typeOptions.contains("Instrumental music only") -> {
+                typeQuery = typeQuery.whereEqualTo("type", "Instrumental")
+                typeSnapshot = typeQuery.get().await()
+                mergedSnapshots.addAll(typeSnapshot.documents)
+                check = true
+            }
 
+            typeOptions.contains("Music with lyrics only") -> {
+                typeQuery = typeQuery.whereEqualTo("type", "Lyrics")
+                typeSnapshot = typeQuery.get().await()
+                mergedSnapshots.addAll(typeSnapshot.documents)
+                check = true
+            }
 
-            decadeQuery = decadeQuery.whereLessThanOrEqualTo("year", sortedDecades.last())
-                .whereGreaterThanOrEqualTo("year", sortedDecades.first())
-            decadeSnapshot = decadeQuery.get().await()
-            mergedSnapshots.addAll(decadeSnapshot.documents)
-            check = true
+            else -> Unit
         }
 
 
@@ -265,6 +292,11 @@ class AllSongsAdapter @Inject constructor(private val glide: RequestManager,
             mergedSnapshots.addAll(songwriterSnapshot.documents)
             check = true
         }
+
+//        Log.d("Type", purposeOptions.toString())
+//        Log.d("Type", genreOptions.toString())
+//        Log.d("Type", typeOptions.toString())
+//        Log.d("Type", songWriterOptions.toString())
 
         val songs = mergedSnapshots.distinctBy {
             it.id

@@ -34,10 +34,10 @@ class EditAccountActivity : AppCompatActivity() {
     private lateinit var profileImage: CircleImageView
     private lateinit var username: EditText
     private lateinit var saveChangesBtn: Button
-    private  var selectedImageUri: Uri? = null
     private lateinit var account: FirebaseAuth
     private lateinit var dialog: AlertDialog
 
+    private  var selectedImageUri: Uri? = null
     var checker = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {

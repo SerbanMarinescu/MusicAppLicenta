@@ -35,6 +35,59 @@
 
     </TextView>
 
+    <RadioGroup
+        android:id="@+id/rgOptions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/twQuestion"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        >
+
+        <RadioButton
+            android:id="@+id/rb1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Instrumental music only"
+            android:textColor="@color/white"
+            >
+
+        </RadioButton>
+
+        <RadioButton
+            android:id="@+id/rb2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Music with lyrics only"
+            android:textColor="@color/white"
+            >
+
+        </RadioButton>
+
+        <RadioButton
+            android:id="@+id/rb3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="I enjoy both instrumental music and music with lyrics equally"
+            android:textColor="@color/white"
+            >
+
+        </RadioButton>
+
+        <RadioButton
+            android:id="@+id/rb4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="I don't have a preference"
+            android:textColor="@color/white"
+            android:checked="true"
+            >
+
+        </RadioButton>
+
+    </RadioGroup>
+
     <LinearLayout
         android:id="@+id/layout_options"
         android:layout_width="match_parent"
@@ -86,12 +139,12 @@
         android:id="@+id/btnSubmit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_options"
+        android:layout_below="@+id/twQuestion"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:textStyle="bold"
+        android:layout_marginTop="250dp"
         android:backgroundTint="#4473d0"
-        android:text="Submit">
+        android:text="Submit"
+        android:textStyle="bold">
 
     </Button>
 

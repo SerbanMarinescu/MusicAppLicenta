@@ -67,11 +67,11 @@ class ProfileActivity : AppCompatActivity() {
 
         userInfo()
 
-        lifecycleScope.launch(Dispatchers.IO){
+        lifecycleScope.launch(Dispatchers.IO) {
 
             songList = getSongs()
 
-            withContext(Dispatchers.Main){
+            withContext(Dispatchers.Main) {
 
                 likedSongsAdapter = LikedSongsAdapter(glide, songList)
 
@@ -80,15 +80,17 @@ class ProfileActivity : AppCompatActivity() {
                 }
 
                 rvLike.adapter = likedSongsAdapter
-                rvLike.layoutManager = LinearLayoutManager(this@ProfileActivity, LinearLayoutManager.HORIZONTAL, false)
-                rvLike.addItemDecoration(object : RecyclerView.ItemDecoration(){
+                rvLike.layoutManager =
+                    LinearLayoutManager(this@ProfileActivity, LinearLayoutManager.HORIZONTAL, false)
+                rvLike.addItemDecoration(object : RecyclerView.ItemDecoration() {
                     override fun getItemOffsets(
                         outRect: Rect,
                         view: View,
                         parent: RecyclerView,
                         state: RecyclerView.State
                     ) {
-                        outRect.right = resources.getDimensionPixelSize(R.dimen.horizontal_spacing) // Set spacing between items (right margin)
+                        outRect.right =
+                            resources.getDimensionPixelSize(R.dimen.horizontal_spacing) // Set spacing between items (right margin)
                     }
                 })
             }
@@ -97,26 +99,32 @@ class ProfileActivity : AppCompatActivity() {
 
 
 
-        editAccountBtn.setOnClickListener{
+        editAccountBtn.setOnClickListener {
             startActivity(Intent(this, EditAccountActivity::class.java))
         }
 
-        logOutBtn.setOnClickListener{
+        logOutBtn.setOnClickListener {
             account.signOut()
             prefsEditor.clear()
             prefsEditor.apply()
-            startActivity(Intent(this, LoginActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK))
-            finish()
+
+            Intent(this, LoginActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(this)
+                finish()
+            }
+
         }
     }
 
-    private fun userInfo(){
+    private fun userInfo() {
 
-        val userRef = FirebaseDatabase.getInstance().reference.child("Users").child(account.currentUser!!.uid)
+        val userRef =
+            FirebaseDatabase.getInstance().reference.child("Users").child(account.currentUser!!.uid)
 
-        userRef.addListenerForSingleValueEvent(object : ValueEventListener{
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                if(snapshot.exists()){
+                if (snapshot.exists()) {
                     val user = snapshot.getValue(User::class.java)
                     glide.load(user!!.imageUrl).into(profileImage)
                     username.text = user.username
@@ -133,18 +141,17 @@ class ProfileActivity : AppCompatActivity() {
     suspend fun getSongIds(): List<String> = suspendCoroutine { continuation ->
 
 
-
         val songIdList = mutableListOf<String>()
         val likeRef = FirebaseDatabase.getInstance().reference
             .child("Liked").child(FirebaseAuth.getInstance().currentUser!!.uid)
 
-        likeRef.addListenerForSingleValueEvent(object : ValueEventListener{
+        likeRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                if(snapshot.exists()){
+                if (snapshot.exists()) {
 
                     songIdList.clear()
 
-                    for(snap in snapshot.children){
+                    for (snap in snapshot.children) {
                         val songId = snap.key
                         songIdList.add(songId!!)
                     }
@@ -159,7 +166,7 @@ class ProfileActivity : AppCompatActivity() {
         })
     }
 
-    suspend fun getSongs(): List<Song>{
+    suspend fun getSongs(): List<Song> {
 
         val songIds = getSongIds()
 

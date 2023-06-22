@@ -14,7 +14,7 @@ class Quiz {
         listOf("Workout and fitness", "Office and productivity", "Homework and studying", "Leisure and relaxation"),
         listOf("Pop", "Romantic", "Dance", "Country"),
         listOf("Instrumental music only", "Music with lyrics only", "I enjoy both instrumental music and music with lyrics equally", "I don't have a preference"),
-        listOf("Ariana Grande", "Ed Sheeran", "The Weeknd", "Taylor Swift")
+        listOf("Andia", "Ed Sheeran", "The Weeknd", "Ellie Goulding")
         // Add more options here
     )
 

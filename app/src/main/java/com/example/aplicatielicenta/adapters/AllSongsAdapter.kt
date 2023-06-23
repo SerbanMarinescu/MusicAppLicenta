@@ -1,7 +1,6 @@
 package com.example.aplicatielicenta.adapters
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +19,7 @@ import com.google.firebase.firestore.*
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
+import java.util.*
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -31,6 +31,7 @@ class AllSongsAdapter @Inject constructor(private val glide: RequestManager,
 
     private val firestore = FirebaseFirestore.getInstance()
     private val songCollection = firestore.collection(SONG_COLLECTION)
+    private val random = Random()
 
     var songs: MutableList<Song> = mutableListOf()
 
@@ -248,14 +249,16 @@ class AllSongsAdapter @Inject constructor(private val glide: RequestManager,
         if(!purposeOptions.contains("NoneSelected")){
             purposeQuery = purposeQuery.whereIn("purpose", purposeOptions)
             purposeSnapshot = purposeQuery.get().await()
-            mergedSnapshots.addAll(purposeSnapshot.documents)
+            getRandomNumberOfSongs(purposeSnapshot, mergedSnapshots)
+            //mergedSnapshots.addAll(purposeSnapshot.documents)
             check = true
         }
 
         if(!genreOptions.contains("NoneSelected")){
             genreQuery = genreQuery.whereIn("genre", genreOptions)
             genreSnapshot = genreQuery.get().await()
-            mergedSnapshots.addAll(genreSnapshot.documents)
+            getRandomNumberOfSongs(genreSnapshot, mergedSnapshots)
+            //mergedSnapshots.addAll(genreSnapshot.documents)
             check = true
         }
 
@@ -271,14 +274,16 @@ class AllSongsAdapter @Inject constructor(private val glide: RequestManager,
             typeOptions.contains("Instrumental music only") -> {
                 typeQuery = typeQuery.whereEqualTo("type", "Instrumental")
                 typeSnapshot = typeQuery.get().await()
-                mergedSnapshots.addAll(typeSnapshot.documents)
+                getRandomNumberOfSongs(typeSnapshot, mergedSnapshots)
+                //mergedSnapshots.addAll(typeSnapshot.documents)
                 check = true
             }
 
             typeOptions.contains("Music with lyrics only") -> {
                 typeQuery = typeQuery.whereEqualTo("type", "Lyrics")
                 typeSnapshot = typeQuery.get().await()
-                mergedSnapshots.addAll(typeSnapshot.documents)
+                getRandomNumberOfSongs(typeSnapshot, mergedSnapshots)
+                //mergedSnapshots.addAll(typeSnapshot.documents)
                 check = true
             }
 
@@ -289,7 +294,8 @@ class AllSongsAdapter @Inject constructor(private val glide: RequestManager,
         if(!songWriterOptions.contains("NoneSelected")){
             songWriterQuery = songWriterQuery.whereIn("subtitle", songWriterOptions)
             songwriterSnapshot = songWriterQuery.get().await()
-            mergedSnapshots.addAll(songwriterSnapshot.documents)
+            getRandomNumberOfSongs(songwriterSnapshot, mergedSnapshots)
+            //mergedSnapshots.addAll(songwriterSnapshot.documents)
             check = true
         }
 
@@ -313,6 +319,26 @@ class AllSongsAdapter @Inject constructor(private val glide: RequestManager,
 
         }
 
+    }
+
+    private fun getRandomNumberOfSongs(querySnapshot: QuerySnapshot, mergedSnapshot: MutableList<DocumentSnapshot>){
+
+        val maxSongCount = querySnapshot.documents.size
+        val randomSongCount = random.nextInt(maxSongCount + 1)
+
+        val randomIndexesList = mutableListOf<Int>()
+
+        while (randomIndexesList.size < randomSongCount){
+            val randomIndex = random.nextInt(maxSongCount)
+
+            if(!randomIndexesList.contains(randomIndex)){
+                randomIndexesList.add(randomIndex)
+            }
+        }
+
+        for(index in randomIndexesList){
+            mergedSnapshot.add(querySnapshot.documents[index])
+        }
     }
 
 

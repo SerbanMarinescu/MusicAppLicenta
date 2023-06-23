@@ -104,7 +104,7 @@ class SgnUpActivity : AppCompatActivity() {
             "uid" to currentUser,
             "username" to username,
             "email" to email,
-            "imageUrl" to "https://firebasestorage.googleapis.com/v0/b/spotifyapp-bf8e2.appspot.com/o/DefaultProfilePicture%2Fprofile.png?alt=media&token=8ee333b5-1c0d-43b9-a390-5bc9838833b6"
+            "imageUrl" to "https://firebasestorage.googleapis.com/v0/b/spotifyapp-bf8e2.appspot.com/o/DefaultProfilePicture%2FprofileImage.png?alt=media&token=bf3a3fb3-7cf9-49de-9f6b-4a37091cb2a5"
         )
 
         userRef.setValue(userData)
